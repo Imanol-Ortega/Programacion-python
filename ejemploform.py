@@ -4,7 +4,7 @@ from tkinter import ttk
 
 import mysql.connector
 
-mydb
+
 
 def cargar_tabla(event):
     mydb = mysql.connector.connect(
