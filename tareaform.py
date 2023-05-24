@@ -11,7 +11,7 @@ root_tk.title("Personas")
 root_tk.config(bg="#000")
 
 datos = {}
-
+# dfsdfsdfsdfsd
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
