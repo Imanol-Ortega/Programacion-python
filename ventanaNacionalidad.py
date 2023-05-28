@@ -44,7 +44,7 @@ def ventanasecundaria(Texto):
         filas = mycursor.fetchall()
         for fila in filas:
             tabla.insert("", tk.END, values=(fila[0], fila[1]))
-    print(Texto)
+    print(Texto)  # dfdfd
     frm2 = tk.Toplevel()
     frm2.geometry("1000x500")
     frm2.title("Nacionalidades")
