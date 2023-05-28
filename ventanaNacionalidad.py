@@ -27,12 +27,16 @@ def ventanasecundaria(Texto):
         cargar_tabla(tecla_presionada)
 
     def borrar():
-        mycursor.execute("DELETE FROM nacionalidad WHERE nacionalidad = %s", [
-                         cajaNacionalidad.get()])
+        brr = str(cajaNacionalidad.get())
+        mycursor.execute(
+            "DELETE FROM nacionalidad WHERE descripcion = %s", [brr])
         mydb.commit()
 
     def guardar():
-        return
+        grd = str(cajaNacionalidad.get())
+        mycursor.execute(
+            "INSERT INTO nacionalidad (descripcion) VALUES(%s)", [grd])
+        mydb.commit()
 
     def cargar_tabla(tecla):
         mycursor.execute(
