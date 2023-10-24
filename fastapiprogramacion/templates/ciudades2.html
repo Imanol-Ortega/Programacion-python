@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciudades</title>
+</head>
+<body>
+    <h1>Editar Ciudad</h1>
+    <form action="/guardar_edicion_ciudad/" method="post">
+        <label for="nombre_ciudad">Nombre de la Ciudad:</label><br>
+        <input type="text" id="nombre_ciudad" name="nombre_ciudad" value="{{ciudad.NombreCiudad}}"><br><br>
+        <label for="id_pais">Selecciona un país:</label><br>
+        <select id="id_pais" name="id_pais">
+            {% for pais in paises %}
+                {% if pais.IdPais == ciudad.IdPais %}
+                    <option value="{{ pais.IdPais }}" selected>{{ pais.NombrePais }}</option>
+                {% else %}
+                    <option value="{{ pais.IdPais }}">{{ pais.NombrePais }}</option>
+                {% endif %}
+            {% endfor %}
+        </select><br><br>
+        <input type="submit" value="Guardar Cambios">
+    </form>
+</body>
+</html>

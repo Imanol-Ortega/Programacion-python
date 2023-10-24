@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport">
+    <title>Barrios</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Nombre</th>
+            <th>Ciudad</th>
+            <th>Acciones</th>
+        </tr>
+        {% for barrios in barrio %}
+            <tr>
+                <td>{{barrios.NombreBarrio}}</td>
+                <td>{{barrios.ciudades.NombreCiudad}}</td>
+                <td>
+                    <a href="/editar_barrio/{{barrios.IdBarrio}}">Editar</a>
+                    <a href="/borrar_barrio/{{barrios.IdBarrio}}">Borrar</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <form action="/agregar_barrio/" method="post">
+        <label for="nombre_barrio">Nombre del Barrio: </label><input type="text" id="nombre_barrio" name="nombre_barrio"><br>
+        <label for="id_ciudad">Selecciona una Ciudad: </label>
+        <select name="id_ciudad" id="id_ciudad">
+            {% for ciudades in ciudad %}
+                <option value="{{ciudades.IdCiudad}}">{{ciudades.NombreCiudad}}</option>
+            {% endfor %}
+        </select><br><br>
+        <input type="submit" value="Agregar Barrio">
+    </form>
+</body>
+</html>

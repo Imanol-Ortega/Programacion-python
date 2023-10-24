@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciudades</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Nombre</th>
+            <th>Pais</th>
+            <th>Acciones</th>
+        </tr>
+        {% for ciudades in ciudad %}
+            <tr>
+                <td>{{ciudades.NombreCiudad}}</td>
+                <td>{{ciudades.pais.NombrePais}}</td>
+                <td>
+                    <a href="/editar_ciudad/{{ciudades.IdCiudad}}">Editar</a>
+                    <a href="/borrar_ciudad/{{ciudades.IdCiudad}}">Borrar</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <form action="/agregar_ciudad/" method="post">
+        <label for="nombre_ciudad">Nombre de la Ciudad:</label><br>
+        <input type="text" id="nombre_ciudad" name="nombre_ciudad"><br><br>
+        <label for="id_pais">Selecciona un país:</label><br>
+        <select id="id_pais" name="id_pais">
+            {% for pais in paises %}
+                <option value="{{ pais.IdPais }}">{{ pais.NombrePais }}</option>
+            {% endfor %}
+        </select><br><br>
+        <input type="submit" value="Agregar Ciudad">
+    </form>
+</body>
+</html>

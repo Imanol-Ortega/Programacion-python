@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport">
+    <title>Barrios</title>
+</head>
+<body>
+    <h1>Editar Barrio</h1>
+    <form action="/guardar_edicion_barrio/" method="post">
+        <label for="nombre_barrio">Nombre del Barrio: </label><input type="text" id="nombre_barrio" name="nombre_barrio" value="{{barrio.NombreBarrio}}"><br>
+        <label for="id_ciudad">Selecciona una Ciudad: </label>
+        <select name="id_ciudad" id="id_ciudad">
+            {% for ciudades in ciudad %}
+                {% if ciudades.IdCiudad == barrio.IdCiudad %}
+                    <option value="{{ciudades.IdCiudad}}" selected>{{ciudades.NombreCiudad}}</option>
+                {% else %}
+                    <option value="{{ciudades.IdCiudad}}">{{ciudades.NombreCiudad}}</option>
+                {% endif %}
+            {% endfor %}
+        </select><br><br>
+        <input type="submit" value="Guardar Cambios">
+    </form>
+</body>
+</html>
