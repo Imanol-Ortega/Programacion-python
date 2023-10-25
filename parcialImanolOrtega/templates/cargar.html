@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/index.css">
+    <title>Cargar</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Cargar Datos</h1>
+        <form action="/guardar/" method="post">
+                <label for="dato">Dato: </label><input type="text" id="dato" name="dato"><br><br><br>
+                <label for="detalle">Detalle: </label><input type="text" id="detalle" name="detalle"><br><br><br>
+                <label for="valor_combo">Selecciona una Ciudad: </label>
+                <select name="valor_combo" id="valor_combo">
+                    <option value="Lechuga">Lechuga</option>
+                    <option value="Ceniza">Ceniza</option>
+                    <option value="Pediiiiiloooooo">Pediiiiiloooooo</option>
+                </select><br><br>
+                <input type="submit" value="Agregar Dato" class="envio">
+        </form>
+        <img src="/static/proyectoakali.jpeg" alt="Proyecto Akali">
+        <h1><a href="/">Volver</a></h1>
+    </div>  
+</body>
+</html>
