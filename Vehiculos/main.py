@@ -1,15 +1,15 @@
-from fastapi import FastAPI, Depends, HTTPException, Request, Form
+from fastapi import FastAPI, Depends, Request, Form
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from fastapi.templating import Jinja2Templates
 from models import Vehicle,Brand,Model,Base
-from pydantic import BaseModel
 from config import DATABASE_URL
 from fastapi.responses import JSONResponse
 from fastapi import Form
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 import starlette.status as status
+from sqlalchemy.orm import joinedload
 
 app = FastAPI()
 # Configura las rutas para archivos estáticos
@@ -48,10 +48,13 @@ def marcas(request:Request):
 def modelos(request:Request,db: Session = Depends(get_db)):
     marca = db.query(Brand).all()
     return templates.TemplateResponse("formmodelo.html",{"request":request,"marca":marca})
+@app.get('/busquedaVehiculos/')
+async def busquedaVehiculos(request:Request):
+    return templates.TemplateResponse("busquedavehiculos.html",{"request":request})
 
 #pedido de datos
 @app.get('/obtener_modelos/{id}')
-async def obtener_modelos(request:Request, id:int,db: Session = Depends(get_db)):
+async def obtener_modelos(id:int,db: Session = Depends(get_db)):
     models = db.query(Model).filter_by(idMarcaFk = id).all()
     return JSONResponse(content=[{"idModelo":model.idModelo,"descModelo":model.descModelo} for model in models])
 
@@ -189,3 +192,19 @@ async def borrar_marca(request:Request,id:int,db: Session = Depends(get_db)):
     return RedirectResponse(
         '/', 
         status_code=status.HTTP_302_FOUND)
+
+
+@app.get("/vehicles/")
+async def read_vehicles(matricula: str = None, marca: str = None, modelo: str = None,color: str = None):
+    db = Session(bind=engine)
+    query = db.query(Vehicle).options(joinedload(Vehicle.brand), joinedload(Vehicle.model))
+    if matricula:
+        query = query.filter(Vehicle.matricula.ilike(f"%{matricula}%"))
+    if marca:
+        query = query.join(Brand).filter(Brand.descMarca.ilike(f"%{marca}%"))
+    if modelo:
+        query = query.join(Model).filter(Model.descModelo.ilike(f"%{modelo}%"))
+    if color:
+        query = query.filter(Vehicle.color.ilike(f"%{color}%"))
+    vehicles = query.all()
+    return vehicles

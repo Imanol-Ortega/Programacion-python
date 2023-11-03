@@ -11,7 +11,6 @@ class Brand(Base):
     idMarca = Column(Integer, primary_key=True, index=True)
     descMarca = Column(String(50), unique=True, index=True)
     models = relationship("Model", back_populates="brand")
-    vehicle = relationship("Vehicle",backref="brands")
 
 class Model(Base):
     __tablename__ = 'models'
