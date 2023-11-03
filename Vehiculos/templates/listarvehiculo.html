@@ -3,9 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
     <title>Lista Vehiculos</title>
 </head>
 <body>
-    
+    <div class="containerr">
+        <h1><a href="/vehiculos/">Agregar</a></h1>
+        <table>
+            <tr>
+                <th>Matricula</th>
+                <th>Color</th>
+                <th>Modelo</th>
+                <th>Marca</th>
+                <th>Foto</th>
+                <th>Acciones</th>
+            </tr>
+        {% for vehiculo in vehiculos %}
+        <tr>
+            <td>{{vehiculo.matricula}}</td>
+            <td>{{vehiculo.color}}</td>
+            <td>{{vehiculo.model.descModelo}}</td>
+            {% for marc in marca if vehiculo.idMarcaFk == marc.idMarca %}
+            <td>{{marc.descMarca}}</td>
+            {%endfor%}
+            <td><img src="{{vehiculo.foto}}" id="iiiimm"></td>
+            <td>
+                <a href="/editar_vehiculo/{{vehiculo.idVehiculo}}">Editar</a>
+                <a href="/borrar_vehiculo/{{vehiculo.idVehiculo}}">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </table>
+    </div>
 </body>
 </html>

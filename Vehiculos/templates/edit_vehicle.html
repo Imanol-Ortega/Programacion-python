@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Edit Vehiculo</title>
+</head>
+<body>
+<div class="container">
+    <form action="/update_vehicle/{{ vehicle.idVehiculo }}" method="post">
+        <label for="matricula">Matricula:</label>
+        <input type="text" id="matricula" name="matricula" value="{{ vehicle.matricula }}"><br><br>
+        <label for="color">Color</label>
+        <input type="text" id="color" name="color" value="{{vehicle.color}}">
+        <label for="brand">Marca</label>
+        <select id="brand" name="idMarcaFk">
+            {% for b in brands %}
+                <option value="{{ b.idMarca }}" {% if b.idMarca == vehicle.idMarcaFk %} selected {% endif %}>{{ b.descMarca }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="model">Modelo</label>
+        <select id="model" name="idModeloFk">
+            {% for m in models %}
+                <option value="{{ m.idModelo }}" {% if m.idModelo == vehicle.idModeloFk %} selected {% endif %}>{{ m.descModelo }}</option>
+            {% endfor %}
+        </select><br><br>
+        <img src="{{vehicle.foto}}" style="height: 50px; width: 100px;">
+
+        
+        <input type="file" accept="image/*" id="image"><br><br>
+        <input type="text" style="display: none;" id="imageb64" name="image">
+        <input type="submit" value="Update">
+    </form>
+    <script>
+        document.getElementById('image').addEventListener('change', function(){
+            const toBase64 = file => new Promise((resolve,reject)=>{
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload  = () => resolve(reader.result);
+                reader.onerror = reject
+            })
+            async function Main(){
+                const file = document.getElementById('image').files[0];
+                const b64 = await toBase64(file);
+                document.getElementById('imageb64').value = b64;
+                console.log(b64);
+            }
+            Main();
+        })
+    </script>
+</div>
+</body>
+</html>

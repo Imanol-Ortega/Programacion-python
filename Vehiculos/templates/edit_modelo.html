@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Modelo</title>
+    <title>Edit Modelo</title>
 </head>
 <body>
-    <div class="container">
-        <form action="/cargar_modelo/" method="post">
+    <div>
+        <form action="/update_modelo/{{modelo.idModelo}}">
             <label for="modelo">Modelo</label>
-            <input type="text" name="modelo" id="modelo"><br><br>
+            <input type="text" name="modelo" id="modelo" value="{{modelo.descModelo}}"><br><br>
             <label for="marca">Marca</label>
             <select name="marca" id="marca">
                 {% for a in marca %}
-                    <option value="{{a.idMarca}}">{{a.descMarca}}</option>
+                <option value="{{ a.idMarca }}" {% if a.idMarca == modelo.idMarcaFk %} selected {% endif %}>{{ a.descMarca }}</option>
                 {% endfor %}
             </select>
             <input type="submit" id="Submit">

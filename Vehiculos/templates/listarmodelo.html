@@ -6,6 +6,27 @@
     <title>Listar Modelo</title>
 </head>
 <body>
-    
+    <div class="containerr">
+        <h1><a href="/modelos/">Agregar</a></h1>
+        <table>
+            <tr>
+                <th>Modelo</th>
+                <th>Marca</th>
+                <th>Acciones</th>
+            </tr>
+        {% for modelo in modelos %}
+        <tr>
+            <td>{{modelo.descModelo}}</td>
+            {% for marca in marcas if modelo.idMarcaFk == marca.idMarca %}
+            <td>{{marca.descMarca}}</td>
+            {%endfor%}
+            <td>
+                <a href="/editar_modelo/{{modelo.idModelo}}">Editar</a>
+                <a href="/borrar_modelo/{{modelo.idModelo}}">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </table>
+    </div>
 </body>
 </html>

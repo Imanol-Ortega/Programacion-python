@@ -6,6 +6,23 @@
     <title>Lista Marca</title>
 </head>
 <body>
-    
+    <div class="containerr">
+        <h1><a href="/marcas/">Agregar</a></h1>
+        <table>
+            <tr>
+                <th>Marca</th>
+                <th>Acciones</th>
+            </tr>
+        {% for marca in marcas %}
+        <tr>
+            <td>{{marca.descMarca}}</td>
+            <td>
+                <a href="/editar_modelo/{{marca.idMarca}}">Editar</a>
+                <a href="/borrar_modelo/{{marca.idMarca}}">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </table>
+    </div>
 </body>
 </html>

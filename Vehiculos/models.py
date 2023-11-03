@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import Text
+from sqlalchemy.dialects.mysql import LONGTEXT
 
 Base = declarative_base()
 
@@ -10,6 +11,7 @@ class Brand(Base):
     idMarca = Column(Integer, primary_key=True, index=True)
     descMarca = Column(String(50), unique=True, index=True)
     models = relationship("Model", back_populates="brand")
+    vehicle = relationship("Vehicle",backref="brands")
 
 class Model(Base):
     __tablename__ = 'models'
@@ -24,7 +26,7 @@ class Vehicle(Base):
     idVehiculo = Column(Integer, primary_key=True, index=True)
     matricula = Column(String(50), unique=True, index=True)
     color = Column(String(50))
-    foto = Column(String(245))
+    foto = Column(LONGTEXT)
     idMarcaFk = Column(Integer, ForeignKey('brands.idMarca'))
     idModeloFk = Column(Integer, ForeignKey('models.idModelo'))
     brand = relationship("Brand")

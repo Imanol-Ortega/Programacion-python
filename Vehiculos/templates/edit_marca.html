@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Edit Marca</title>
+</head>
+<body>
+    <div class="containerr">
+        <form action="/update_marca/{{marca.idMarca}}" method="post">
+            <label for="marca">Marca</label>
+            <input type="text" name="marca" id="marca" placeholder="Ingrese la marca" value="{{marca.descMarca}}">
+            <input type="submit" id="Submit">
+        </form>
+    </div>
+</body>
+</html>

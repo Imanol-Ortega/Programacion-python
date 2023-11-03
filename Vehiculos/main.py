@@ -15,18 +15,18 @@ app = FastAPI()
 # Configura las rutas para archivos estáticos
 app.mount("/static", StaticFiles(directory="static"), name="static")
 # Incluye otro archivo de rutas
-# Configuración de la base de datos
+# Configuración de la base de datos 
 engine = create_engine(DATABASE_URL)
 # Agrega esta línea para eliminar las tablas existentes
 #Base.metadata.drop_all(bind=engine)
 
 # Luego, usa create_all para crear las tablas según las definiciones de los modelos
-#Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine) 
 
 # Configuración de las plantillas de Jinja2
 templates = Jinja2Templates(directory="templates")
 
-def get_db():
+def get_db():  
     db = Session(bind=engine)
     try:
         yield db
@@ -36,6 +36,7 @@ def get_db():
 def menu(request:Request):
     return templates.TemplateResponse("index.html",{"request":request})
 
+#formulariosss
 @app.get("/vehiculos/")
 def vehiculos(request:Request,db: Session = Depends(get_db)):
     brands = db.query(Brand).all()
@@ -44,22 +45,147 @@ def vehiculos(request:Request,db: Session = Depends(get_db)):
 def marcas(request:Request):
     return templates.TemplateResponse("formmarca.html",{"request":request})
 @app.get("/modelos/")
-def modelos(request:Request):
-    return templates.TemplateResponse("formmodelo.html",{"request":request})
+def modelos(request:Request,db: Session = Depends(get_db)):
+    marca = db.query(Brand).all()
+    return templates.TemplateResponse("formmodelo.html",{"request":request,"marca":marca})
 
-
+#pedido de datos
 @app.get('/obtener_modelos/{id}')
 async def obtener_modelos(request:Request, id:int,db: Session = Depends(get_db)):
     models = db.query(Model).filter_by(idMarcaFk = id).all()
     return JSONResponse(content=[{"idModelo":model.idModelo,"descModelo":model.descModelo} for model in models])
 
 
-
+#carga de formularios
 @app.post('/cargar_vehiculos/')
 async def cargar_vehiculos(request:Request, matricula: str = Form(...),color: str = Form(...),idMarkaFk: int = Form(...), idModeloFk: int=Form(...), image: str = Form(...),db: Session = Depends(get_db)):
     new_v = Vehicle(matricula = matricula,color=color,foto = image,idMarcaFk=idMarkaFk, idModeloFk=idModeloFk)
     db.add(new_v)
     db.commit()
+    return RedirectResponse(
+        '/', 
+        status_code=status.HTTP_302_FOUND)
+@app.post('/cargar_marca/')
+async def cargar_marca(request:Request, marca: str=Form(...),db: Session = Depends(get_db)):
+    new_m = Brand(descMarca=marca)
+    db.add(new_m)
+    db.commit()
+    return RedirectResponse(
+        '/', 
+        status_code=status.HTTP_302_FOUND)
+
+@app.post('/cargar_modelo/')
+async def cargar_modelo(request:Request,modelo: str = Form(...),marca: int = Form(...),db: Session = Depends(get_db)):
+    new_md = Model(descModelo=modelo,idMarcaFk=marca)
+    db.add(new_md)
+    db.commit()
+    return RedirectResponse(
+        '/', 
+        status_code=status.HTTP_302_FOUND)
+
+#listadossss
+@app.get('/listar_vehiculos/')
+async def listar_vehiculos(request:Request,db: Session = Depends(get_db)):
+    vehiculos = db.query(Vehicle).all()
+    marca = db.query(Brand).all()
+    return templates.TemplateResponse('listarvehiculo.html',{'request':request,"vehiculos":vehiculos,"marca":marca})
+
+@app.get('/listar_modelo/')
+async def listar_modelo(request:Request,db: Session = Depends(get_db)):
+    modelo = db.query(Model).all()
+    marca = db.query(Brand).all()
+    return templates.TemplateResponse('listarmodelo.html',{"request":request,"marcas":marca,"modelos":modelo})
+
+@app.get('/listar_marca/')
+async def listar_marca(request:Request,db: Session = Depends(get_db)):
+    marca = db.query(Brand).all()
+    return templates.TemplateResponse('listarmarca.html',{"request":request,"marcas":marca})
+
+#envio formulario editable    
+@app.get('/editar_vehiculo/{id}')
+async def listar_vehiculo(request:Request,id:int,db: Session = Depends(get_db)):
+    vehicle = db.query(Vehicle).filter(Vehicle.idVehiculo == id).first()
+    brands = db.query(Brand).all()
+    models = db.query(Model).filter(Model.idMarcaFk == vehicle.idMarcaFk).all()
+    db.close()
+    return templates.TemplateResponse("edit_vehicle.html", {"request": request, "vehicle": vehicle, "brands": brands, "models": models})
+@app.get('/editar_marca/{id}')
+async def editar_modelo(request:Request,id:int,db: Session = Depends(get_db)):
+    marca = db.query(Brand).filter(Brand.idMarca == id).first()
+    db.close()
+    return templates.TemplateResponse("edit_marca.html",{"request":request,"marca":marca})
+@app.get('/editar_modelo/{id}')
+async def editar_modelo(request:Request,id:int,db: Session = Depends(get_db)):
+    modelo = db.query(Model).filter(Model.idModelo == id).first()
+    marca = db.query(Brand).all()
+    return templates.TemplateResponse('edit_modelo.html',{"request": request, "modelo":modelo,"marca":marca})
+
+ #guardar actualizaciones
+@app.post('/update_vehicle/{id}')
+async def update_vehicle(request:Request,id:int,matricula: str = Form(...),color: str = Form(...),idMarcaFk: int = Form(...), idModeloFk: int=Form(...), image: str = Form(...),  db: Session = Depends(get_db)):
+    vehicle = db.query(Vehicle).filter(Vehicle.idVehiculo == id)
+    if vehicle:
+        vehicle.matricula = matricula
+        vehicle.color = color
+        vehicle.foto = image
+        vehicle.idMarcaFk = idMarcaFk
+        vehicle.idModeloFk = idModeloFk
+        db.commit()
+
+    return RedirectResponse(
+        '/', 
+        status_code=status.HTTP_302_FOUND)
+@app.post('/update_marca/{id}')
+async def update_marca(request:Request,id:int, marca: str = Form(...),  db: Session = Depends(get_db)):
+    marca = db.query(Brand).filter(Brand.idMarca == id)
+    if marca:
+        marca.descMarca = marca
+        db.commit()
+    return RedirectResponse(
+        '/', 
+        status_code=status.HTTP_302_FOUND)
+
+@app.post('/update_modelo/{id}')
+async def update_modelo(request:Request,id:int, marca: int = Form(...),modelo:str = Form(...)  ,db: Session = Depends(get_db)):
+    modelo = db.query(Model).filter(Model.idModelo == id)
+    if modelo:
+        modelo.descModelo = modelo
+        modelo.idMarcaFk = marca
+        db.commit()
+    return RedirectResponse(
+        '/', 
+        status_code=status.HTTP_302_FOUND)
+
+
+@app.get('/borrar_vehiculo/{id}')
+async def borrar_vehiculo(request:Request,id:int,db: Session = Depends(get_db)):
+    vehiculo = db.query(Vehicle).filter(Vehicle.idVehiculo == id).first()
+    if vehiculo:
+        db.delete(vehiculo)
+        db.commit()
+        db.close()
+    return RedirectResponse(
+        '/', 
+        status_code=status.HTTP_302_FOUND)
+
+@app.get('/borrar_modelo/{id}')
+async def borrar_modelo(request:Request,id:int,db: Session = Depends(get_db)):
+    modelo = db.query(Model).filter(Model.idModelo == id).first()
+    if modelo:
+        db.delete(modelo)
+        db.commit()
+        db.close()
+
+    return RedirectResponse(
+        '/', 
+        status_code=status.HTTP_302_FOUND)
+@app.get('/borrar_marca/{id}')
+async def borrar_marca(request:Request,id:int,db: Session = Depends(get_db)):
+    marca = db.query(Brand).filter(Brand.idMarca ==id).first()
+    if marca:
+        db.delete(marca)
+        db.commit()
+        db.close()
     return RedirectResponse(
         '/', 
         status_code=status.HTTP_302_FOUND)
