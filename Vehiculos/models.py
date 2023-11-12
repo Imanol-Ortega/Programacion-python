@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey,Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import Text
@@ -30,3 +30,17 @@ class Vehicle(Base):
     idModeloFk = Column(Integer, ForeignKey('models.idModelo'))
     brand = relationship("Brand")
     model = relationship("Model")
+
+class Ingreso(Base):
+    __tablename__ = 'ingresos'
+    idIngreso = Column(Integer, primary_key=True, index=True)
+    Dia = Column(String(50), index=True)
+    Fecha = Column(Date)
+    CantIngreso = Column(Integer)
+
+
+class DetalleIngreso(Base):
+    __tablename__ = 'detalleingreso'
+    idIngreso = Column(Integer, ForeignKey('ingresos.idIngreso'))
+    idVehiculo = Column(Integer, ForeignKey('vehicles.idVehiculo'))
+
