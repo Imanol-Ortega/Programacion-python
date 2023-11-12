@@ -36,20 +36,22 @@ def get_db():
 def menu(request:Request):
     return templates.TemplateResponse("index.html",{"request":request})
 
-@app.get('/prueba/')
-async def prueba(request:Request):
+@app.get("/ingresos/")
+def ingresos(request:Request):
+    return templates.TemplateResponse("ingreso.html", {"request": request})
+
+@app.post('/ingreso_vehiculo/')
+async def prueba(request:Request, fechaIngreso: str = Form(...),diasIngreso: str = Form(...), cantIngreso: int = Form(...)):
+    #print("fecha:",fechaIngreso)
     coneccion = engine.raw_connection()
-    dia = 'Miercoles'
-    fecha = '2023-12-15'
-    cant = 50000
     try:
         cursor = coneccion.cursor()
-        cursor.callproc("guardar_ingreso",[dia,fecha,cant])
+        cursor.callproc("guardar_ingreso",[diasIngreso,fechaIngreso,cantIngreso])
         cursor.close()
         coneccion.commit()
     finally:
         coneccion.close()
-        return {'message':'error'}
+        return RedirectResponse('/', status_code=status.HTTP_302_FOUND)
     
 
 #formulariosss
@@ -60,6 +62,8 @@ def vehiculos(request:Request,db: Session = Depends(get_db)):
 @app.get("/marcas/")
 def marcas(request:Request):
     return templates.TemplateResponse("formmarca.html",{"request":request})
+
+
 @app.get("/modelos/")
 def modelos(request:Request,db: Session = Depends(get_db)):
     marca = db.query(Brand).all()
