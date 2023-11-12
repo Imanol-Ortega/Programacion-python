@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, Request, Form
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from fastapi.templating import Jinja2Templates
-from models import Vehicle,Brand,Model,Base
+from models import Vehicle,Brand,Model,Base,Ingreso,DetalleIngreso
 from config import DATABASE_URL
 from fastapi.responses import JSONResponse
 from fastapi import Form
@@ -35,6 +35,22 @@ def get_db():
 @app.get("/")
 def menu(request:Request):
     return templates.TemplateResponse("index.html",{"request":request})
+
+@app.get('/prueba/')
+async def prueba(request:Request):
+    coneccion = engine.raw_connection()
+    dia = 'Miercoles'
+    fecha = '2023-12-15'
+    cant = 50000
+    try:
+        cursor = coneccion.cursor()
+        cursor.callproc("guardar_ingreso",[dia,fecha,cant])
+        cursor.close()
+        coneccion.commit()
+    finally:
+        coneccion.close()
+        return {'message':'error'}
+    
 
 #formulariosss
 @app.get("/vehiculos/")
@@ -85,7 +101,6 @@ async def cargar_modelo(request:Request,modelo: str = Form(...),marca: int = For
     return RedirectResponse(
         '/', 
         status_code=status.HTTP_302_FOUND)
-
 #listadossss
 @app.get('/listar_vehiculos/')
 async def listar_vehiculos(request:Request,db: Session = Depends(get_db)):
