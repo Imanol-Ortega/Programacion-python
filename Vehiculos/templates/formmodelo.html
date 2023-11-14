@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/estilazo.css">
     <title>Form Modelo</title>
 </head>
-<body>
-    <div class="container">
+<body class="cuerpo">
+    <div class="contenedor">
         <form action="/cargar_modelo/" method="post">
-            <label for="modelo">Modelo</label>
+            <label for="modelo" class="texto">Modelo</label>
             <input type="text" name="modelo" id="modelo"><br><br>
-            <label for="marca">Marca</label>
+            <label for="marca" class="texto">Marca</label>
             <select name="marca" id="marca">
                 {% for a in marca %}
                     <option value="{{a.idMarca}}">{{a.descMarca}}</option>
