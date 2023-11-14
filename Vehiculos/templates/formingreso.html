@@ -1,0 +1,55 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrada</title>
+</head>
+<body>
+    <form action="/ingreso_vehiculo/" method="post">
+        <input type="submit" id="Submit"><br><br>
+        <label for="diaIngreso">Día de Ingreso</label>
+        <select name="diasIngreso" id="diasIngreso">
+            <option value="Lunes">Lunes</option>
+            <option value="Martes">Martes</option>
+            <option value="Miercoles">Miercoles</option>
+            <option value="Jueves">Jueves</option>
+            <option value="Viernes">Viernes</option>
+            <option value="Sabado">Sabado</option>
+            <option value="Domingo">Domingo</option>
+        </select><br><br>
+        <label for="fechaIngreso">Fecha de Ingreso</label>
+        <input type="date" name="fechaIngreso" id="fechaIngreso"><br><br>
+        <label for="cantIngreso">Cantidad de Ingreso</label>
+        <input type="number" name="cantIngreso" id="cantIngreso"><br><br>
+        <table>
+            <tr>
+                <th>Matricula</th>
+                <th>Color</th>
+                <th>Modelo</th>
+                <th>Marca</th>
+                <th>check</th>
+            </tr>
+        {% for vehiculo in vehiculos %}
+        <tr>
+            <td>{{vehiculo.matricula}}</td>
+            <td>{{vehiculo.color}}</td>
+            <td>{{vehiculo.model.descModelo}}</td>
+            <td>{{vehiculo.brand.descMarca}}</td>
+            <td><input type="checkbox" value="{{vehiculo.idVehiculo}}" id="checkvehicle"></td>
+            
+        </tr>
+        {% endfor %}
+
+        
+    </form>
+    <button><a href="/">Volver</a></button>
+    <script>
+        const check = document.querySelectorAll('#checkvehicle');
+        for(let i=0; i<check.length; i++){
+            check[i].addEventListener('click',()=>{
+                console.log(check[i].value)
+            })
+        }
+    </script>
+</body>
+</html>

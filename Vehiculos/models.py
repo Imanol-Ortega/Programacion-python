@@ -30,7 +30,7 @@ class Vehicle(Base):
     idModeloFk = Column(Integer, ForeignKey('models.idModelo'))
     brand = relationship("Brand")
     model = relationship("Model")
-    ingreso = relationship('Ingreso', secondary='detalleingreso')
+    
 
 class Ingreso(Base):
     __tablename__ = 'ingresos'
@@ -38,11 +38,17 @@ class Ingreso(Base):
     Dia = Column(String(50), index=True)
     Fecha = Column(Date)
     CantIngreso = Column(Integer)
-    vehiculo = relationship('Vehicle', secondary='detalleingreso')
+    
 
 
 class DetalleIngreso(Base):
     __tablename__ = 'detalleingreso'
     idIngreso = Column(Integer,ForeignKey('ingresos.idIngreso'), primary_key=True )
-    idVehiculo = Column(Integer, ForeignKey('vehicles.idVehiculo'),primary_key=True, )
+    idVehiculo = Column(Integer, ForeignKey('vehicles.idVehiculo'),primary_key=True )
 
+
+
+class Garaje(Base):
+    __tablename__ = 'garaje'
+    idGaraje = Column(Integer, primary_key=True,index=True)
+    nombre = Column(String(50))

@@ -37,8 +37,9 @@ def menu(request:Request):
     return templates.TemplateResponse("index.html",{"request":request})
 
 @app.get("/ingresos/")
-def ingresos(request:Request):
-    return templates.TemplateResponse("ingreso.html", {"request": request})
+def ingresos(request:Request,db: Session = Depends(get_db)):
+    vehiculos = db.query(Vehicle).all()
+    return templates.TemplateResponse("formingreso.html", {"request": request, "vehiculos":vehiculos})
 
 @app.post('/ingreso_vehiculo/')
 async def prueba(request:Request, fechaIngreso: str = Form(...),diasIngreso: str = Form(...), cantIngreso: int = Form(...)):
@@ -170,6 +171,7 @@ async def update_marca(request:Request,id:int, marca: str = Form(...),  db: Sess
 @app.post('/update_modelo/{id}')
 async def update_modelo(request:Request,id:int, marca: int = Form(...),modelo:str = Form(...)  ,db: Session = Depends(get_db)):
     modelo = db.query(Model).filter(Model.idModelo == id)
+    print(id)
     if modelo:
         modelo.descModelo = modelo
         modelo.idMarcaFk = marca
