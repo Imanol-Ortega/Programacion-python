@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/estilazo.css">
     <title>Busqueda Vehiculos</title>
 </head>
-<body>
-    <form id="searchForm" method="get">
-        <label for="matricula">Matricula:</label>
+<body class="cuerpo">
+    <form id="searchForm" method="get" class="">
+        <label for="matricula" class="texto">Matricula:</label>
         <input type="text" id="matricula" name="matricula" onkeyup="searchVehicles()""><br><br>
 
-        <label for="marca">Marca:</label>
+        <label for="marca" class="texto">Marca:</label>
         <input type="text" id="marca" name="marca" onkeyup="searchVehicles()"><br><br>
         
-        <label for="color">Color:</label>
+        <label for="color" class="texto">Color:</label>
         <input type="text" id="color" name="color" onkeyup="searchVehicles()"><br><br>
 
-        <label for="modelo">Modelo:</label>
+        <label for="modelo" class="texto">Modelo:</label>
         <input type="text" id="modelo" name="modelo" onkeyup="searchVehicles()"><br><br>
     </form>
 

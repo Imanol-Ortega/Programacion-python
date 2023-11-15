@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/estilazo.css">
     <title>Lista Vehiculos</title>
 </head>
-<body>
-    <div class="containerr">
+<body class="cuerpo">
+    <div class="contenedor">
         <h1><a href="/vehiculos/">Agregar</a></h1>
         <table>
-            <tr>
+            <tr class="texto">
                 <th>Matricula</th>
                 <th>Color</th>
                 <th>Modelo</th>
@@ -26,7 +26,7 @@
             {% for marc in marca if vehiculo.idMarcaFk == marc.idMarca %}
             <td>{{marc.descMarca}}</td>
             {%endfor%}
-            <td><img src="{{vehiculo.foto}}" id="iiiimm"></td>
+            <td><img src="{{vehiculo.foto}}" id="queso"></td>
             <td>
                 <a href="/editar_vehiculo/{{vehiculo.idVehiculo}}">Editar</a>
                 <a href="/borrar_vehiculo/{{vehiculo.idVehiculo}}">Eliminar</a>

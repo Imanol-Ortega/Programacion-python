@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/estilazo.css">
     <title>Form Vehiculo</title>
 </head>
-<body>
-    <div class="container">
+<body class="cuerpo">
+    <div class="contenedor">
         <form action="/cargar_vehiculos/" method="post" enctype="multipart/form-data">
-            <label for="matricula">Matricula</label>
-            <input type="text" id="Matricula" name="matricula"><br><br>
-            <label for="color">Color</label>
+            <label for="matricula" class="texto">Matricula</label>
+            <input type="text" id="Matricula" name="matricula" class=""><br><br>
+            <label for="color" class="texto">Color</label>
             <input type="text" id="color" name="color"><br><br>
-            <label for="brand">Marca</label>
+            <label for="brand" class="texto">Marca</label>
             <select name="idMarkaFk" id="brand">
                 <option value="0">Seleccione una Marca</option>
                 {% for b in brands %}
                     <option value="{{b.idMarca}}">{{b.descMarca}}</option>
                 {% endfor %}
             </select><br><br>
-            <label for="model">Modelo</label>
+            <label for="model" class="texto">Modelo</label>
             <select name="idModeloFk" id="model">
                     <option value="">Selecciona una marca primero</option>
             </select><br><br>
-            <input type="file" accept="image/*" id="image"><br><br>
+            <input type="file" accept="image/*" id="image" class="texto"><br><br>
             <input type="text" style="display: none;" id="imageb64" name="image">
             <input type="submit" value="Submit">
         </form>

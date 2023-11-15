@@ -1,5 +1,5 @@
 *{
-    background-color: #555;
+    background-color: #2F243A;
     text-decoration: none;
     color: #fff;
 }
@@ -9,6 +9,7 @@ a{
     border: 1px solid #444;
     border-radius: 4px;
     background-color: #aaa;
+    text-decoration: none;
 }
 .container{
     display: flex;

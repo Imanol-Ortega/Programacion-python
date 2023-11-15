@@ -1,0 +1,33 @@
+.cuerpo{
+    background-color: #2F243A;
+}
+
+.contenedor{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+a{
+    text-decoration: none;
+    color: #BEBBBB;
+}
+.texto{
+    color: #BEBBBB;
+}
+#queso{
+    width: 50px;
+    height: 50px;
+}
+
+tr{
+    color: #BEBBBB;
+    border-color: #BEBBBB;
+    border: 10px;
+    border-color: white;
+}
+tr>td{
+    background-color: #444054;
+}
