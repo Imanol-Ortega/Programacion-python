@@ -5,8 +5,8 @@
     <title>Entrada</title>
 </head>
 <body>
-    <form action="/ingreso_vehiculo/" method="post">
-        <input type="submit" id="Submit"><br><br>
+    <form  id="form_ingreso">
+        
         <label for="diaIngreso">Día de Ingreso</label>
         <select name="diasIngreso" id="diasIngreso">
             <option value="Lunes">Lunes</option>
@@ -21,35 +21,58 @@
         <input type="date" name="fechaIngreso" id="fechaIngreso"><br><br>
         <label for="cantIngreso">Cantidad de Ingreso</label>
         <input type="number" name="cantIngreso" id="cantIngreso"><br><br>
-        <table>
-            <tr>
-                <th>Matricula</th>
-                <th>Color</th>
-                <th>Modelo</th>
-                <th>Marca</th>
-                <th>check</th>
-            </tr>
-        {% for vehiculo in vehiculos %}
-        <tr>
-            <td>{{vehiculo.matricula}}</td>
-            <td>{{vehiculo.color}}</td>
-            <td>{{vehiculo.model.descModelo}}</td>
-            <td>{{vehiculo.brand.descMarca}}</td>
-            <td><input type="checkbox" value="{{vehiculo.idVehiculo}}" id="checkvehicle"></td>
-            
-        </tr>
-        {% endfor %}
-
-        
+        <input type="submit" id="Submit" value="Agregar Cabecera"><br><br>
     </form>
+    
+    <Form id="form_vehicles">
+        <input type="text" name = "idIngreso" id="idIngreso" style="display: none;">
+        <select name="vehicles" id="vehicles">
+            <option value="0">Seleccione un Vehiculo</option>
+            {% for b in vehiculos %}
+                <option value="{{b.idVehiculo}}">{{b.matricula}}</option>
+            {% endfor %}
+        </select><br><br>
+        <input type="submit" id="Submit" value="Agregar Vehiculo"><br><br>
+    </Form>
+    <table id="ingresostable" border="1">
+        <tr>
+            <th>Matricula</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+        </tr>
+    </table>
+
     <button><a href="/">Volver</a></button>
     <script>
-        const check = document.querySelectorAll('#checkvehicle');
-        for(let i=0; i<check.length; i++){
-            check[i].addEventListener('click',()=>{
-                console.log(check[i].value)
+        document.getElementById("form_ingreso").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const dia = formData.get("diasIngreso");
+            const fecha = formData.get("fechaIngreso");
+            const cant = formData.get("cantIngreso");
+
+            fetch(`/ingreso_vehiculo/?dias=${dia}&fechas=${fecha}&cantidad=${cant}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data[0].out_id); 
+                document.getElementById('id_ingreso').value = data.out_id;
             })
-        }
+            .catch(error => console.error('Error:', error));
+        });
+        document.getElementById("form_vehicles").addEventListener("submit",function(event){
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const idIngreso = formData.get("idIngreso");
+            const idVehiculo = formData.get("vehicles");
+
+            fetch(`/agregar_ingreso_vehiculo/?idIngreso=${idIngreso}&idVehiculo=${idVehiculo}`).then(response=>response.json())
+            .then(data=>{
+                console.log(data[0])
+            })
+            .catch(error => console.error('Error: ',error))
+        })
     </script>
 </body>
 </html>

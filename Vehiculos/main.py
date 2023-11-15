@@ -10,6 +10,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 import starlette.status as status
 from sqlalchemy.orm import joinedload
+from sqlalchemy.sql import text
+
 
 app = FastAPI()
 # Configura las rutas para archivos estáticos
@@ -26,6 +28,9 @@ engine = create_engine(DATABASE_URL)
 # Configuración de las plantillas de Jinja2
 templates = Jinja2Templates(directory="templates")
 
+
+
+
 def get_db():  
     db = Session(bind=engine)
     try:
@@ -41,18 +46,14 @@ def ingresos(request:Request,db: Session = Depends(get_db)):
     vehiculos = db.query(Vehicle).all()
     return templates.TemplateResponse("formingreso.html", {"request": request, "vehiculos":vehiculos})
 
-@app.post('/ingreso_vehiculo/')
-async def prueba(request:Request, fechaIngreso: str = Form(...),diasIngreso: str = Form(...), cantIngreso: int = Form(...)):
-    #print("fecha:",fechaIngreso)
-    coneccion = engine.raw_connection()
-    try:
-        cursor = coneccion.cursor()
-        cursor.callproc("guardar_ingreso",[diasIngreso,fechaIngreso,cantIngreso])
-        cursor.close()
-        coneccion.commit()
-    finally:
-        coneccion.close()
-        return RedirectResponse('/', status_code=status.HTTP_302_FOUND)
+@app.get('/ingreso_vehiculo/')
+async def prueba(dias: str, fechas: str,cantidad: int ,db: Session = Depends(get_db)):
+
+    result = db.execute(text("CALL guardar_ingreso(:dia_entrada,:fecha_entrada,:cantingreso_entrada,@out_id)"),
+    {"dia_entrada":dias , "fecha_entrada":fechas ,"cantingreso_entrada":cantidad})
+    db.commit()
+    out_id = db.execute(text("SELECT @out_id")).fetchone()[0]
+    return JSONResponse(content=[{"out_id":out_id}])
     
 
 #formulariosss

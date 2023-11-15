@@ -52,3 +52,7 @@ class Garaje(Base):
     __tablename__ = 'garaje'
     idGaraje = Column(Integer, primary_key=True,index=True)
     nombre = Column(String(50))
+
+class DetalleGaraje(Base):
+    __tablename__ = 'detallegaraje'
+    idGaraje = Column(Integer,ForeignKey('garaje.idGaraje'),primary_key=True)
