@@ -1,8 +1,8 @@
-from fastapi import FastAPI, Depends, Request, Form
+from fastapi import FastAPI, Depends, Request, Form,HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from fastapi.templating import Jinja2Templates
-from models import Vehicle,Brand,Model,Base,Ingreso,DetalleIngreso
+from models import Vehicle,Brand,Model,Base,Ingreso,DetalleIngreso,Garaje,DetalleGaraje
 from config import DATABASE_URL
 from fastapi.responses import JSONResponse
 from fastapi import Form
@@ -11,7 +11,7 @@ from fastapi.responses import RedirectResponse
 import starlette.status as status
 from sqlalchemy.orm import joinedload
 from sqlalchemy.sql import text
-
+from sqlalchemy import exc
 
 app = FastAPI()
 # Configura las rutas para archivos estáticos
@@ -55,6 +55,15 @@ async def prueba(dias: str, fechas: str,cantidad: int ,db: Session = Depends(get
     out_id = db.execute(text("SELECT @out_id")).fetchone()[0]
     return JSONResponse(content=[{"out_id":out_id}])
     
+@app.get('/agregar_ingreso_vehiculo/')
+async def agregar_ingreso(idIngreso: int, idVehiculo: int, db: Session = Depends(get_db)):
+    detalle = DetalleIngreso(idIngreso = idIngreso, idVehiculo = idVehiculo)
+    db.add(detalle)
+    db.commit()
+    vehiculos = db.query(Vehicle).join(DetalleIngreso).filter(DetalleIngreso.idIngreso == idIngreso)
+    vehiculo_dict = [vehiculo.to_dict() for vehiculo in vehiculos]
+    return JSONResponse(content=[vehiculo_dict])
+
 
 #formulariosss
 @app.get("/vehiculos/")

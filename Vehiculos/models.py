@@ -30,7 +30,15 @@ class Vehicle(Base):
     idModeloFk = Column(Integer, ForeignKey('models.idModelo'))
     brand = relationship("Brand")
     model = relationship("Model")
-    
+    def to_dict(self):
+        return {
+            "idVehiculo": self.idVehiculo,
+            "matricula": self.matricula,
+            "color": self.color,
+            "foto": self.foto,
+            "nombreMarca": self.brand.descMarca,
+            "nombreModelo": self.model.descModelo,
+        }
 
 class Ingreso(Base):
     __tablename__ = 'ingresos'
@@ -42,17 +50,18 @@ class Ingreso(Base):
 
 
 class DetalleIngreso(Base):
-    __tablename__ = 'detalleingreso'
+    __tablename__ = 'detalleingresos'
     idIngreso = Column(Integer,ForeignKey('ingresos.idIngreso'), primary_key=True )
     idVehiculo = Column(Integer, ForeignKey('vehicles.idVehiculo'),primary_key=True )
 
 
 
 class Garaje(Base):
-    __tablename__ = 'garaje'
+    __tablename__ = 'garajes'
     idGaraje = Column(Integer, primary_key=True,index=True)
     nombre = Column(String(50))
 
 class DetalleGaraje(Base):
-    __tablename__ = 'detallegaraje'
-    idGaraje = Column(Integer,ForeignKey('garaje.idGaraje'),primary_key=True)
+    __tablename__ = 'detallegarajes'
+    idGaraje = Column(Integer,ForeignKey('garajes.idGaraje'),primary_key=True)
+    idVehiculo = Column(Integer, ForeignKey('vehicles.idVehiculo'),primary_key=True )

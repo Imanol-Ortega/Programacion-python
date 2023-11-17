@@ -5,20 +5,9 @@
     <link rel="stylesheet" href="../static/estilazo.css">
     <title>Entrada</title>
 </head>
-<body>
-    <form  id="form_ingreso">
-        
-        <label for="diaIngreso">Día de Ingreso</label>
-        <select name="diasIngreso" id="diasIngreso">
-            <option value="Lunes">Lunes</option>
-            <option value="Martes">Martes</option>
-            <option value="Miercoles">Miercoles</option>
-            <option value="Jueves">Jueves</option>
 <body class="cuerpo">
     <div class="contenedor">
-
-        <form action="/ingreso_vehiculo/" method="post">
-            <input type="submit" id="Submit"><br><br>
+        <form id="form_ingreso">
             <label for="diaIngreso" class="texto">Día de Ingreso</label>
             <select name="diasIngreso" id="diasIngreso">
                 <option value="Lunes">Lunes</option>
@@ -32,12 +21,12 @@
         <label for="fechaIngreso" class="texto">Fecha de Ingreso</label>
         <input type="date" name="fechaIngreso" id="fechaIngreso"><br><br>
         <label for="cantIngreso" class="texto">Cantidad de Ingreso</label>
-        <input type="number" name="cantIngreso" id="cantIngreso"><br><br>
+        <input type="number" name="cantIngreso" id="cantIngreso" value=0><br><br>
         <input type="submit" id="Submit" value="Agregar Cabecera"><br><br>
     </form>
     
     <Form id="form_vehicles">
-        <input type="text" name = "idIngreso" id="idIngreso" style="display: none;">
+        <input type="text" name ="idIngreso" id="idIngreso" style="display: none;">
         <select name="vehicles" id="vehicles">
             <option value="0">Seleccione un Vehiculo</option>
             {% for b in vehiculos %}
@@ -53,30 +42,7 @@
             <th>Modelo</th>
         </tr>
     </table>
-
     <button><a href="/">Volver</a></button>
-        <table>
-            <tr>
-                <th>Matricula</th>
-                <th>Color</th>
-                <th>Modelo</th>
-                <th>Marca</th>
-                <th>check</th>
-            </tr>
-            {% for vehiculo in vehiculos %}
-            <tr>
-                <td>{{vehiculo.matricula}}</td>
-                <td>{{vehiculo.color}}</td>
-                <td>{{vehiculo.model.descModelo}}</td>
-                <td>{{vehiculo.brand.descMarca}}</td>
-                <td><input type="checkbox" value="{{vehiculo.idVehiculo}}" id="checkvehicle"></td>
-                
-            </tr>
-            {% endfor %}
-            
-            
-        </form>
-        <button><a href="/">Volver</a></button>
     </div>
     <script>
         document.getElementById("form_ingreso").addEventListener("submit", function(event) {
@@ -91,7 +57,7 @@
             .then(response => response.json())
             .then(data => {
                 console.log(data[0].out_id); 
-                document.getElementById('id_ingreso').value = data.out_id;
+                document.getElementById('idIngreso').value = data[0].out_id;
             })
             .catch(error => console.error('Error:', error));
         });
@@ -102,11 +68,30 @@
             const idIngreso = formData.get("idIngreso");
             const idVehiculo = formData.get("vehicles");
 
-            fetch(`/agregar_ingreso_vehiculo/?idIngreso=${idIngreso}&idVehiculo=${idVehiculo}`).then(response=>response.json())
+            fetch(`/agregar_ingreso_vehiculo/?idIngreso=${idIngreso}&idVehiculo=${idVehiculo}`)
+            .then(response=>response.json())
             .then(data=>{
+                const si = document.getElementById('cantIngreso').value
+                document.getElementById('cantIngreso').value = parseInt(si) + 1
                 console.log(data[0])
+                const table = document.getElementById('ingresostable');
+                table.innerHTML = `
+                <tr>
+                    <th>Matricula</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                </tr>
+                ${data[0].map(dt => `
+                    <tr>
+                        <td>${dt.matricula}</td>
+                        <td>${dt.nombreMarca}</td>
+                        <td>${dt.nombreModelo}</td>
+                    </tr>
+                `).join('')}
+            `;
+                
             })
-            .catch(error => console.error('Error: ',error))
+            .catch(error => alert('No puede cargar el mismo vehiculo'))
         })
     </script>
 </body>
