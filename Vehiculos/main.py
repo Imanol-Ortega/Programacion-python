@@ -77,11 +77,29 @@ async def buscar_ingreso(dia: str,db: Session = Depends(get_db)):
     vehiculo_dict = [vehiculo.to_dict() for vehiculo in vehiculos]
     return JSONResponse(content=[vehiculo_dict])
 
+
 @app.get('/listarpormodelo/')
 def listarpormodelo(request:Request,db: Session = Depends(get_db)):
     marcas = db.query(Brand).all()
     return templates.TemplateResponse("listadopormarca.html",{'request':request,'marcas':marcas})
 
+
+@app.get('/listar_garajes/')
+def listargarajes(request:Request,db: Session = Depends(get_db)):
+    garajes = db.query(Garaje).all()
+    return templates.TemplateResponse('listargaraje.html',{'request':request,'garajes':garajes})
+
+@app.get('/garajes/')
+def garajes(request:Request):
+    return templates.TemplateResponse('formgaraje.html',{'request':request})
+@app.post('/guardar_garaje/')
+def guardar_garaje(request:Request,nombre: str = Form(...),db: Session = Depends(get_db)):
+    new = Garaje(nombre = nombre)
+    db.add(new)
+    db.commit()
+    return RedirectResponse(
+        '/', 
+        status_code=status.HTTP_302_FOUND)
 #formulariosss
 @app.get("/vehiculos/")
 def vehiculos(request:Request,db: Session = Depends(get_db)):

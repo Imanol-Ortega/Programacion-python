@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garaje</title>
+</head>
+<body>
+    <div>
+        <h1><a href="/garajes/">Agregar</a></h1>
+        <table>
+            <tr>
+                <th>nombre</th>
+                <th>Acciones</th>
+            </tr>
+        {% for garaje in garajes %}
+        <tr>
+            <td>{{garaje.nombre}}</td>
+            <td>
+                <!--<a href="/borrar_garaje/{{garaje.idGaraje}}">Eliminar</a>-->
+                <a href="#">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
