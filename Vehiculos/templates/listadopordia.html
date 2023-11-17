@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>por dia</title>
+</head>
+<body>
+    <div>
+        <select name="diasIngreso" id="diasIngreso">
+            <option>Seleccione un dia</option>
+            <option value="Lunes">Lunes</option>
+            <option value="Martes">Martes</option>
+            <option value="Miercoles">Miercoles</option>
+            <option value="Jueves">Jueves</option>
+            <option value="Viernes">Viernes</option>
+            <option value="Sabado">Sabado</option>
+            <option value="Domingo">Domingo</option>
+        </select><br><br>
+        <table id="ingresostable" border="1">
+            <tr>
+                <th>Matricula</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+            </tr>
+        </table>
+        <button><a href="/">Volver</a></button>
+    </div>
+    <script>
+        document.getElementById('diasIngreso').addEventListener('change',()=>{
+            const dias =  document.getElementById('diasIngreso').value
+            const table =  document.getElementById('ingresostable')
+            console.log(dias)
+            fetch(`/buscar_ingreso/?dia=${dias}`)
+            .then(response=>response.json())
+            .then(data=>{
+                console.log(data[0])
+                table.innerHTML = `
+                <tr>
+                    <th>Matricula</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                </tr>
+                ${data[0].map(dt => `
+                    <tr>
+                        <td>${dt.matricula}</td>
+                        <td>${dt.nombreMarca}</td>
+                        <td>${dt.nombreModelo}</td>
+                    </tr>
+                `).join('')}
+            `;
+                
+            })
+            .catch(error => console.error(error))
+        })
+    </script>
+</body>
+</html>

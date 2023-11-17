@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>por modelo</title>
+</head>
+<body>
+    <div>
+        <select name="marca" id="marca">
+            <option>Seleccione una marca</option>
+            {% for marca in marcas %}
+                <option value="{{marca.idMarca}}">{{marca.descMarca}}</option>
+            {% endfor %}
+        </select>
+        <table id="modelotable" border="1">
+            <tr>
+                <th>Modelo</th>
+            </tr>
+        </table>
+        <button><a href="/">Volver</a></button>
+    </div>
+    <script>
+        document.getElementById('marca').addEventListener('change',()=>{
+            const table = document.getElementById('modelotable');
+            const id = document.getElementById('marca').value
+            fetch('/obtener_modelos/' + id)
+            .then(response=>response.json())
+            .then(data=>{
+                console.log(data[0])
+                table.innerHTML = `
+                <tr>
+                    <th>Modelo</th>
+                </tr>
+                ${data.map(dt => `
+                    <tr>
+                        <td>${dt.descModelo}</td>
+                    </tr>
+                `).join('')}
+            `;
+                
+            })
+            .catch(error => console.error(error))
+        });
+    </script>
+</body>
+</html>

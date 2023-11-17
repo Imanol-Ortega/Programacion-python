@@ -65,6 +65,23 @@ async def agregar_ingreso(idIngreso: int, idVehiculo: int, db: Session = Depends
     return JSONResponse(content=[vehiculo_dict])
 
 
+
+@app.get('/listarpordia/')
+def listarpordia(request:Request):
+    return templates.TemplateResponse("listadopordia.html",{'request':request})
+
+@app.get('/buscar_ingreso/')
+async def buscar_ingreso(dia: str,db: Session = Depends(get_db)):
+    vehiculos = db.query(Vehicle).join(DetalleIngreso).join(Ingreso).filter(Ingreso.Dia == dia)
+    print(vehiculos)
+    vehiculo_dict = [vehiculo.to_dict() for vehiculo in vehiculos]
+    return JSONResponse(content=[vehiculo_dict])
+
+@app.get('/listarpormodelo/')
+def listarpormodelo(request:Request,db: Session = Depends(get_db)):
+    marcas = db.query(Brand).all()
+    return templates.TemplateResponse("listadopormarca.html",{'request':request,'marcas':marcas})
+
 #formulariosss
 @app.get("/vehiculos/")
 def vehiculos(request:Request,db: Session = Depends(get_db)):
