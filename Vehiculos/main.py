@@ -78,7 +78,7 @@ async def buscar_ingreso(dia: str,db: Session = Depends(get_db)):
     return JSONResponse(content=[vehiculo_dict])
 
 
-@app.get('/listarpormodelo/')
+@app.get('/listarpormodelo/') 
 def listarpormodelo(request:Request,db: Session = Depends(get_db)):
     marcas = db.query(Brand).all()
     return templates.TemplateResponse("listadopormarca.html",{'request':request,'marcas':marcas})
@@ -123,6 +123,40 @@ async def busquedaVehiculos(request:Request):
 async def obtener_modelos(id:int,db: Session = Depends(get_db)):
     models = db.query(Model).filter_by(idMarcaFk = id).all()
     return JSONResponse(content=[{"idModelo":model.idModelo,"descModelo":model.descModelo} for model in models])
+
+@app.get("/agregar_vehiculo_garaje/")
+async def agregar_vehiculo_garaje(idGaraje : int, idVehiculos : int,db: Session = Depends(get_db)):
+    newVehiculos = DetalleGaraje(idGaraje=idGaraje,idVehiculo=idVehiculos)
+    db.add(newVehiculos)
+    db.commit()
+    vehiculos = db.query(Vehicle).join(DetalleGaraje).filter(DetalleGaraje.idGaraje == idGaraje)
+    vehiculo_dict = [vehiculo.to_dict() for vehiculo in vehiculos]
+    return JSONResponse(content=[vehiculo_dict])
+
+@app.get("/borrar_garaje/{id}")
+def borrar_Garaje(id: int, db: Session = Depends(get_db)):
+    garajesDetalle = db.query(DetalleGaraje).filter(DetalleGaraje.idGaraje == id).first()
+
+    if garajesDetalle:
+        db.delete(garajesDetalle)
+        db.commit()
+        db.close()
+
+    garaje = db.query(Garaje).filter(Garaje.idGaraje == id).first()
+    if garaje:
+        db.delete(garaje)
+        db.commit()
+        db.close()
+
+    return RedirectResponse(
+        '/', 
+        status_code=status.HTTP_302_FOUND)
+
+@app.get("/vehiculo_garaje/")
+def vehiculoGaraje(request:Request, db: Session = Depends(get_db)):
+    garajes = db.query(Garaje).all()
+    vehiculos = db.query(Vehicle).all()
+    return templates.TemplateResponse("vehiculoGarage.html",{"request":request,"garajes":garajes,"vehiculos":vehiculos})
 
 
 #carga de formularios

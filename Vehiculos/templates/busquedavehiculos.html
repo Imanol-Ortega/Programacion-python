@@ -7,48 +7,49 @@
     <title>Busqueda Vehiculos</title>
 </head>
 <body class="cuerpo">
-    <form id="searchForm" method="get" class="">
-        <label for="matricula" class="texto">Matricula:</label>
-        <input type="text" id="matricula" name="matricula" onkeyup="searchVehicles()""><br><br>
-
-        <label for="marca" class="texto">Marca:</label>
-        <input type="text" id="marca" name="marca" onkeyup="searchVehicles()"><br><br>
+    <div class="contenedor">
+        <form id="searchForm" method="get" class="">
+            <label for="matricula" class="texto">Matricula:</label>
+            <input type="text" id="matricula" name="matricula" onkeyup="searchVehicles()""><br><br>
+            
+            <label for="marca" class="texto">Marca:</label>
+            <input type="text" id="marca" name="marca" onkeyup="searchVehicles()"><br><br>
+            
+            <label for="color" class="texto">Color:</label>
+            <input type="text" id="color" name="color" onkeyup="searchVehicles()"><br><br>
+            
+            <label for="modelo" class="texto">Modelo:</label>
+            <input type="text" id="modelo" name="modelo" onkeyup="searchVehicles()"><br><br>
+        </form>
         
-        <label for="color" class="texto">Color:</label>
-        <input type="text" id="color" name="color" onkeyup="searchVehicles()"><br><br>
-
-        <label for="modelo" class="texto">Modelo:</label>
-        <input type="text" id="modelo" name="modelo" onkeyup="searchVehicles()"><br><br>
-    </form>
-
-    <table id="vehiclesTable" border="1">
-        <tr>
-            <th>Matricula</th>
-            <th>Marca</th>
-            <th>Modelo</th>
+        <table id="vehiclesTable" border="1">
+            <tr>
+                <th>Matricula</th>
+                <th>Marca</th>
+                <th>Modelo</th>
             <th>Foto</th>
         </tr>
     </table>
-
+    
     <script>
         async function searchVehicles() {
             const matricula = document.getElementById('matricula').value;
             const marca = document.getElementById('marca').value;
             const modelo = document.getElementById('modelo').value;
             const color = document.getElementById('color').value;
-
+            
             const response = await fetch(`/vehicles/?matricula=${matricula}&marca=${marca}&modelo=${modelo}&color=${color}`);
             const vehicles = await response.json();
-
+            
             const table = document.getElementById('vehiclesTable');
             console.log(vehicles)
             table.innerHTML = `
-                <tr>
-                    <th>Matricula</th>
-                    <th>Marca</th>
-                    <th>Color</th>
-                    <th>Modelo</th>
-                    <th>Foto</th>
+            <tr>
+                <th>Matricula</th>
+                <th>Marca</th>
+                <th>Color</th>
+                <th>Modelo</th>
+                <th>Foto</th>
                 </tr>
                 ${vehicles.map(vehicle => `
                     <tr>
@@ -57,10 +58,11 @@
                         <td>${vehicle.color}</td>
                         <td>${vehicle.model.descModelo}</td>
                         <td><img src='${vehicle.foto}' id = 'iiid/></td>
-                    </tr>
-                `).join('')}
+                        </tr>
+                        `).join('')}
             `;
         }
-    </script>
+        </script>
+        </div>
 </body>
 </html>

@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/estilazo.css">
     <title>Garaje</title>
 </head>
-<body>
-    <div>
+<body class="cuerpo">
+    <div class="contenedor">
         <h1><a href="/garajes/">Agregar</a></h1>
         <table>
             <tr>
@@ -17,8 +18,7 @@
         <tr>
             <td>{{garaje.nombre}}</td>
             <td>
-                <!--<a href="/borrar_garaje/{{garaje.idGaraje}}">Eliminar</a>-->
-                <a href="#">Eliminar</a>
+                <a href="/borrar_garaje/{{garaje.idGaraje}}">Eliminar</a>
             </td>
         </tr>
         {% endfor %}

@@ -1,0 +1,69 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/estilazo.css">
+    <title>Vehículo Garaje</title>
+</head>
+<body class="cuerpo">
+    <div class="contenedor">
+
+        <form id="form_vehicles">
+            <select name="garaje" id="garaje">
+                <option>Seleccione Una Opción</option>
+                {% for garaje in garajes %}
+                <option value="{{garaje.idGaraje}}">{{garaje.nombre}}</option>
+                {%endfor%}
+        </select><br><br>
+        <select name="vehicles" id="vehicles">
+            <option value="0">Seleccione un Vehiculo</option>
+            {% for b in vehiculos %}
+            <option value="{{b.idVehiculo}}">{{b.matricula}}</option>
+            {% endfor %}
+        </select><br><br>
+        <input type="submit" id="Submit" value="Agregar Vehiculo"><br><br>
+    </form>
+    <table id="ingresostable" border="1">
+        <tr>
+            <th>Matricula</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+        </tr>
+    </table>
+    <script>
+        document.getElementById("form_vehicles").addEventListener("submit",function(event){
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const idGaraje = formData.get("garaje");
+            const idVehiculo = formData.get("vehicles");
+            
+            console.log(idGaraje,"||| ",idVehiculo);
+            
+            fetch(`/agregar_vehiculo_garaje/?idGaraje=${idGaraje}&idVehiculos=${idVehiculo}`)
+            .then(response=>response.json())
+            .then(data=>{
+                console.log(data[0])
+                const table = document.getElementById('ingresostable');
+                table.innerHTML = `
+                <tr>
+                    <th>Matricula</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    </tr>
+                    ${data[0].map(dt => `
+                        <tr>
+                            <td>${dt.matricula}</td>
+                            <td>${dt.nombreMarca}</td>
+                            <td>${dt.nombreModelo}</td>
+                            </tr>
+                            `).join('')}
+                            `;
+                            
+                        })
+                        .catch(error => alert('No puede cargar el mismo vehiculo'))
+                    })
+                    </script>
+    </div>
+</body>
+</html>
